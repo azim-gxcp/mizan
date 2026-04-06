@@ -439,7 +439,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
       <div class="cat" onclick="pickCat('crypto')" id="c-crypto">
         <div class="cat-icon">₿</div>
         <div class="cat-name">Crypto &amp; digital assets</div>
-        <div class="cat-hint">Bitcoin, Ethereum, stablecoins, DeFi, NFTs</div>
+        <div class="cat-hint">Bitcoin, Ethereum, stablecoins, DeFi, NFTs, tokenized assets</div>
       </div>
     </div>
 
@@ -516,6 +516,7 @@ const SUBS = {
     {id:'defi',name:'DeFi / yield farming',desc:'Lending protocols, liquidity pools, staking rewards'},
     {id:'nft',name:'NFTs / digital tokens',desc:'Non-fungible tokens, digital art, gaming tokens'},
     {id:'crypto_exchange',name:'Crypto exchange / swap',desc:'Converting one crypto to another'},
+    {id:'rwa_token',name:'Tokenized real-world assets (RWA)',desc:'Tokenized gold, real estate, commodities, equity, or other physical assets on blockchain'},
   ],
 };
 
@@ -1216,6 +1217,69 @@ crypto_exchange:[
      {label:'Yes — atomic swap or immediate DEX settlement',sub:'Both sides in one transaction',val:'atomic',w:{}},
      {label:'Near-immediate — T+0 or same session on a centralised exchange',sub:'',val:'fast',w:{}},
      {label:'Delayed — one or both sides settle later',sub:'',val:'delayed',w:{dayn_grows:2}},
+   ]},
+],
+
+// ──────────────────────────────────────────
+// TOKENIZED REAL-WORLD ASSETS (RWA)
+// ──────────────────────────────────────────
+rwa_token:[
+  {phase:0,
+   text:'What is the underlying real-world asset that this token represents?',
+   plain:'Strip the blockchain layer away — what actually sits behind this token?',
+   principle:'The Shariah ruling on a tokenized asset follows the ruling on the underlying asset itself. A token representing gold is governed by Sarf rules (Ribawi exchange). A token representing debt is governed by Dayn rules. A token representing equity follows Musharakah/Mudarabah principles. The blockchain wrapper does not change the Hukm of what is wrapped.',
+   opts:[
+     {label:'Gold or silver',sub:'Precious metals — Ribawi items by Ijma\'',val:'gold',w:{ribawi:1}},
+     {label:'Real estate or land',sub:'Physical property tokenized into shares',val:'realestate',w:{}},
+     {label:'Commodities — oil, crops, industrial metals',sub:'Physical goods with intrinsic utility',val:'commodity',w:{}},
+     {label:'Equity — shares in a company or project',sub:'Ownership stake in a business',val:'equity',w:{mixed:1}},
+     {label:'Debt instruments — bonds, Sukuk, receivables',sub:'A claim on a future payment',val:'debt',w:{riba_core:3}},
+   ]},
+  {phase:0,
+   text:'Does the token represent genuine legal ownership of the underlying asset?',
+   plain:'If the issuer disappears tomorrow — do you legally own the asset, or just a digital record?',
+   principle:'Ownership (Milk) is a pillar of valid sale in Islamic law. If the token does not convey real legal title, the holder has no Milk — the transaction may be a form of Gharar (uncertainty) or Qimar (gambling on price). Synthetic exposure without ownership is closer to a wager on price movement than to a genuine sale.',
+   opts:[
+     {label:'Yes — full legal title transfers with the token',sub:'Enforceable ownership in the relevant jurisdiction',val:'full',w:{}},
+     {label:'Partial — I own a share, held by a custodian on my behalf',sub:'Beneficial ownership through a trust or SPV',val:'partial',w:{nominal_own:1}},
+     {label:'No — the token only tracks the price, no real ownership',sub:'Synthetic exposure, derivative-like',val:'none',w:{no_own:2}},
+   ]},
+  {phase:1,
+   text:'How is the underlying asset custodied and verified?',
+   plain:'Who holds the physical asset, and how do you know it actually exists and matches what the token claims?',
+   principle:'Ghashsh (fraud/deception) is categorically Haram. The Prophet ﷺ said: "Whoever cheats us is not one of us." If the underlying asset cannot be independently verified, the buyer faces Gharar Fahish (excessive uncertainty). Transparent, third-party audits reduce Gharar to acceptable levels.',
+   opts:[
+     {label:'Independent third-party audits with public proof-of-reserves',sub:'Regulated custodian, published audit reports',val:'audited',w:{}},
+     {label:'Custodian exists but verification is self-reported',sub:'The issuer claims the asset exists but no independent audit',val:'self_reported',w:{speculative:1}},
+     {label:'No clear custody or verification mechanism',sub:'Cannot confirm the asset actually backs the token',val:'none',w:{no_own:2}},
+   ]},
+  {phase:1,
+   text:'Are you earning yield or income from holding this token?',
+   plain:'Does the token pay you anything — a fixed return, a share of profits, or lending income?',
+   principle:'The nature of the yield determines the ruling. A fixed percentage return on a token is structurally identical to Riba — a guaranteed increase on capital regardless of outcome. Profit-sharing from the actual asset (rent from real estate, dividends from equity) follows Musharakah principles and is permissible if genuine risk is shared.',
+   opts:[
+     {label:'No yield — I hold for potential price appreciation only',sub:'',val:'none',w:{}},
+     {label:'Fixed percentage return — guaranteed by the issuer',sub:'E.g. "8% annual yield on your gold token"',val:'fixed',w:{riba_core:3}},
+     {label:'DeFi lending yield — I lend the token to earn interest',sub:'Depositing in a lending protocol for yield',val:'defi_lend',w:{riba_core:3}},
+     {label:'Profit share from the underlying asset',sub:'Rent, dividends, or commodity returns — variable, not guaranteed',val:'profit_share',w:{}},
+   ]},
+  {phase:3,
+   text:'Is the token\'s value denominated in or pegged to a fiat currency?',
+   plain:'Is the price of this token expressed as a fixed amount of dollars, euros, or another government currency?',
+   principle:'If the token is denominated in fiat, then its exchange involves fiat currency — and the broader question of whether fiat money itself is Ribawi applies. This does not make the token Haram per se, but it means the Ribawi analysis must account for the fiat medium of exchange.',
+   opts:[
+     {label:'Yes — the token\'s value is pegged to or denominated in fiat',sub:'E.g. "1 token = $1 worth of gold"',val:'yes',w:{fiat_question:1}},
+     {label:'No — the token floats freely against fiat',sub:'Price is determined by market supply and demand',val:'no',w:{}},
+   ]},
+  {phase:5,
+   text:'What is your primary purpose in holding this token?',
+   plain:'Why did you acquire this token — what do you intend to do with it?',
+   principle:'Maqasid al-Shariah (objectives of the law) considers intention and outcome. Speculative flipping of tokenized assets — buying only to sell quickly at a higher price with no interest in the underlying asset — resembles Maysir (gambling). Long-term holding for genuine asset exposure, income generation, or wealth preservation aligns with the Shariah objective of Hifz al-Mal (preservation of wealth).',
+   opts:[
+     {label:'Short-term speculation — buying to flip for quick profit',sub:'No interest in the underlying asset itself',val:'speculate',w:{speculative:2}},
+     {label:'Long-term investment — genuine exposure to the asset',sub:'Holding for wealth preservation or growth',val:'hold',w:{}},
+     {label:'Income generation — earning yield from the asset',sub:'Rent, dividends, or commodity returns',val:'income',w:{}},
+     {label:'Using as collateral or for portfolio diversification',sub:'',val:'collateral',w:{}},
    ]},
 ],
 
@@ -1927,7 +1991,7 @@ function computeVerdict(subtype, qList, ansArr, medium, entryPath) {
 
   // Ribawi characteristics grid for currency/commodity questions
   let ribawiGrid = null;
-  const ribawiSubs = ['forex','money_changer','bitcoin','altcoin','crypto_exchange','stablecoin','commodity','crypto_invest'];
+  const ribawiSubs = ['forex','money_changer','bitcoin','altcoin','crypto_exchange','stablecoin','commodity','crypto_invest','rwa_token'];
   if (ribawiSubs.includes(subtype)) {
     ribawiGrid = {
       items:[
@@ -1941,7 +2005,7 @@ function computeVerdict(subtype, qList, ansArr, medium, entryPath) {
       ],
       activeCol: subtype === 'bitcoin' ? 'crypto_b' :
                  ['altcoin','stablecoin','crypto_exchange','crypto_invest'].includes(subtype) ? 'crypto_a' :
-                 ['commodity','salam','murabaha_trade'].includes(subtype) ? 'commodity' : 'fiat'
+                 ['commodity','salam','murabaha_trade','rwa_token'].includes(subtype) ? 'commodity' : 'fiat'
     };
   }
 
